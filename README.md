@@ -3,15 +3,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 
-## CSS framework: Bulma
+## CSS framework: [Bulma](https://bulma.io)
 <a href="https://bulma.io"><img src="https://raw.githubusercontent.com/jgthms/bulma/master/docs/images/bulma-banner.png" alt="Bulma: a Flexbox CSS framework" style="max-width:100%;" width="240"></a>
-# [Bulma](https://bulma.io)
 
-Bulma is a **modern CSS framework** based on [Flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Using_CSS_flexible_boxes).
-
-![Github](https://img.shields.io/github/v/release/jgthms/bulma?logo=Bulma)
-
-## Documentation
+### Documentation
 Browse the [online documentation here.](https://bulma.io/documentation/start/overview/)
 
 ## Running Project
