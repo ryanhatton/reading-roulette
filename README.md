@@ -1,77 +1,78 @@
 # Reading Roulette
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Reading Roulette is a web application built with React that allows users to discover random books based on selected subjects and languages. Utilizing the Google Books API, Reading Roulette makes book discovery exciting and spontaneous.
 
+## Features
 
-## CSS framework: [Bulma](https://bulma.io)
-<a href="https://bulma.io"><img src="https://raw.githubusercontent.com/jgthms/bulma/master/docs/images/bulma-banner.png" alt="Bulma: a Flexbox CSS framework" style="max-width:100%;" width="240"></a>
+- **Book Selection**: Users can choose a book's subject and language.
+- **Random Book Discovery**: Fetches a random book from a pool of books based on the user's selection.
+- **Detailed Book Information**: Displays detailed information about the book, including title, authors, and description.
+- **Responsive Design**: Fully responsive web design that works on desktop and mobile.
 
-### Documentation
-Browse the [online documentation here.](https://bulma.io/documentation/start/overview/)
+## Technologies Used
 
-## Running Project
+- React.js
+- Axios for API requests
+- Bulma CSS Framework
+- FontAwesome for icons
 
-In the project directory, you can run:
+## Getting Started
 
-### `npm start`
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+You need to have Node.js and npm installed on your computer. Node.js 12.x or newer is recommended.
 
-### `npm test`
+### Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the repository**
 
-### `npm run build`
+   ```bash
+   git clone https://github.com/ryanhatton/reading-roulette.git
+   cd reading-roulette
+2. **Install dependencies**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   npm install
+3. **Start the development server**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   npm start
+   ```
+   This runs the app in the development mode. Open http://localhost:3000 to view it in the browser.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Usage
 
-### `npm run eject`
+Once the application is running:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Select a Subject**: Choose from a list of subjects like Fiction, Non-Fiction, Science, etc.
+- **Select a Language**: Choose from English, Spanish, French, etc.
+- **Find a Book**: Click on the 'Find a Book' button to fetch a random book based on your selections.
+- **View Book Details**: If a book is found, the modal will display detailed information about the book.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contributing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Learn More
+## License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project is licensed under the [MIT License](http://opensource.org/licenses/mit-license.php).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Acknowledgments
 
-### Code Splitting
+- Google Books API for providing the book data.
+- Bulma CSS for the styling framework.
+- FontAwesome for providing the web icons used in the application.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Contact
 
-### Analyzing the Bundle Size
+Ryan Hatton - [@HiRyanHatton](https://twitter.com/HiRyanHatton)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Project Link**: [https://github.com/ryanhatton/reading-roulette](https://github.com/ryanhatton/reading-roulette)
