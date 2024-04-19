@@ -6,8 +6,10 @@ import logo from "./logo.svg";
 
 function App() {
   const [book, setBook] = useState(null);
-  const [subject, setSubject] = useState("fiction"); // Default to Fiction
-  const [language, setLanguage] = useState("en"); // Default to English
+  const [subject, setSubject] = useState("fiction");
+  const [language, setLanguage] = useState("en");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   function shuffleArray(array) {
     let currentIndex = array.length,
@@ -27,7 +29,7 @@ function App() {
     const maxResults = 40;
     const maxStartIndex = 200;
     const startIndex = Math.floor(Math.random() * maxStartIndex);
-  
+
     axios
       .get(`https://www.googleapis.com/books/v1/volumes`, {
         params: {
@@ -41,34 +43,36 @@ function App() {
         const books = response.data.items;
         if (!books || books.length === 0) {
           if (retry < maxRetries) {
-            console.log(`No books found, retrying... [Attempt ${retry + 1}]`);
             setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
           } else {
-            console.error("No books found after several attempts.");
-            alert("No books found for this subject. Please try again or choose another subject.");
+            setError(
+              "No books found after several attempts. Please try a different subject or language."
+            );
+            setIsLoading(false);
           }
         } else {
-          // Filter out books that do not have both authors and a description
-          const validBooks = books.filter(book =>
-            book.volumeInfo && book.volumeInfo.authors && book.volumeInfo.description);
-  
+          const validBooks = books.filter(
+            (book) =>
+              book.volumeInfo &&
+              book.volumeInfo.authors &&
+              book.volumeInfo.description
+          );
           if (validBooks.length > 0) {
             const shuffledBooks = shuffleArray(validBooks);
-            const randomBook = shuffledBooks[0];
-            setBook(randomBook);
+            setBook(shuffledBooks[0]);
           } else {
-            // If no valid books are found in the current fetch, retry fetching
-            console.log("No valid books in this fetch, retrying...");
             setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
           }
+          setIsLoading(false);
         }
       })
       .catch((error) => {
-        console.error("Error fetching data: ", error);
-        alert("Failed to load data. Please check your network connection and try again.");
+        setError(
+          "Failed to load data. Please check your network connection and try again."
+        );
+        setIsLoading(false);
       });
   };
-  
 
   return (
     <div className="App">
@@ -79,6 +83,7 @@ function App() {
       </header>
 
       <div className="container mb-6">
+      {error && <div className="notification is-danger">{error}</div>}
         <div class="mb-6">
           <div className="field column">
             <label className="label is-medium ">Select a Subject:</label>
@@ -128,12 +133,13 @@ function App() {
           </div>
         </div>
 
-        <button
-          className="button is-primary is-large"
-          onClick={fetchRandomBook}
-        >
-          Find a Book
-        </button>
+        {!isLoading ? (
+          <button className="button is-primary is-large" onClick={fetchRandomBook}>
+            Find a Book
+          </button>
+        ) : (
+          <button className="button is-primary is-large is-loading">Loading...</button>
+        )}
 
         {book && (
           <div className="modal is-active">
