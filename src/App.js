@@ -25,9 +25,9 @@ function App() {
 
   const fetchRandomBook = (retry = 0, maxRetries = 5) => {
     const maxResults = 40;
-    const maxStartIndex = 200; // Reduced maxStartIndex to improve hit rate
+    const maxStartIndex = 200;
     const startIndex = Math.floor(Math.random() * maxStartIndex);
-
+  
     axios
       .get(`https://www.googleapis.com/books/v1/volumes`, {
         params: {
@@ -42,30 +42,37 @@ function App() {
         if (!books || books.length === 0) {
           if (retry < maxRetries) {
             console.log(`No books found, retrying... [Attempt ${retry + 1}]`);
-            setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000); // Delay retry to prevent rapid-fire requests
+            setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
           } else {
             console.error("No books found after several attempts.");
-            alert(
-              "No books found for this subject. Please try again or choose another subject."
-            );
+            alert("No books found for this subject. Please try again or choose another subject.");
           }
         } else {
-          const shuffledBooks = shuffleArray(books);
-          const randomBook = shuffledBooks[0];
-          setBook(randomBook);
+          // Filter out books that do not have both authors and a description
+          const validBooks = books.filter(book =>
+            book.volumeInfo && book.volumeInfo.authors && book.volumeInfo.description);
+  
+          if (validBooks.length > 0) {
+            const shuffledBooks = shuffleArray(validBooks);
+            const randomBook = shuffledBooks[0];
+            setBook(randomBook);
+          } else {
+            // If no valid books are found in the current fetch, retry fetching
+            console.log("No valid books in this fetch, retrying...");
+            setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
+          }
         }
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
-        alert(
-          "Failed to load data. Please check your network connection and try again."
-        );
+        alert("Failed to load data. Please check your network connection and try again.");
       });
   };
+  
 
   return (
     <div className="App">
-      <header className="App-header mb-6">
+      <header className="App-header mb-4">
         <img src={logo} className="App-logo is-hidden-mobile" alt="logo" />
         <h1 class="title has-text-info is-1 mt-6">Reading Roulette</h1>
         <p class="subtitle is-4 mt-2">Leave your next book to chance.</p>
@@ -84,13 +91,13 @@ function App() {
                 >
                   <option value="fiction">Fiction</option>
                   <option value="nonfiction">Non-Fiction</option>
-                  <option value="self-help">Self-Help</option>
                   <option value="history">History</option>
                   <option value="biography">Biography</option>
+                  <option value="self-help">Self-Help</option>
                   <option value="science">Science</option>
+                  <option value="fantasy">Fantasy</option>
                   <option value="technology">Technology</option>
                   <option value="philosophy">Philosophy</option>
-                  <option value="manga">Manga</option>
                 </select>
                 <span class="icon is-small is-left">
                   <i class="fas fa-book"></i>
@@ -100,7 +107,7 @@ function App() {
           </div>
 
           <div className="field column">
-            <label className="label is-large">Select Language:</label>
+            <label className="label is-medium">Select Language:</label>
             <div className="control has-icons-left">
               <div className="select is-large">
                 <span class="select">
@@ -127,6 +134,7 @@ function App() {
         >
           Find a Book
         </button>
+
         {book && (
           <div className="modal is-active">
             <div
@@ -136,18 +144,17 @@ function App() {
             <div className="modal-card">
               <section className="modal-card-body">
                 <div className="media">
-                  <div className="mr-5 is-hidden-mobile">
-                    <figure className="image is-128x128">
-                      <img
-                        src={
-                          book.volumeInfo.imageLinks
-                            ? book.volumeInfo.imageLinks.thumbnail
-                            : "https://via.placeholder.com/128"
-                        }
-                        alt={book.volumeInfo.title}
-                      />
-                    </figure>
-                  </div>
+                  {book.volumeInfo.imageLinks &&
+                    book.volumeInfo.imageLinks.thumbnail && (
+                      <div className="mr-5 is-hidden-mobile">
+                        <figure className="image is-128x128">
+                          <img
+                            src={book.volumeInfo.imageLinks.thumbnail}
+                            alt={book.volumeInfo.title}
+                          />
+                        </figure>
+                      </div>
+                    )}
                   <div className="media-content">
                     <p className="title is-size-3 mb-1 has-text-left">
                       {book.volumeInfo.title}
@@ -202,8 +209,10 @@ function App() {
 
       <footer class="footer">
         <div class="content has-text-centered mt-6">
-          <p class="subtitle mb-6"><strong>Reading Roulette</strong> was made with ❤️ by{" "}
-            <a href="https://ryanhatton.net">Ryan Hatton</a>.</p>
+          <p class="subtitle mb-6">
+            <strong>Reading Roulette</strong> was made with ❤️ by{" "}
+            <a href="https://ryanhatton.net">Ryan Hatton</a>.
+          </p>
           <p>
             Source code licensed
             <a href="http://opensource.org/licenses/mit-license.php">
@@ -217,8 +226,10 @@ function App() {
           </p>
           <div class="buttons is-grouped is-centered">
             <a
-              href="http://opensource.org/licenses/mit-license.php"
+              href="https://github.com/ryanhatton/reading-roulette/tree/main"
               class="button is-info is-inverted"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <span class="icon">
                 <i class="fab fa-github"></i>
