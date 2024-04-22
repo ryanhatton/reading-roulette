@@ -12,6 +12,7 @@ Reading Roulette is a web application built with React that allows users to disc
 ## Technologies Used
 
 - React.js
+- [Lodash](https://lodash.com/), a modern JavaScript utility library delivering modularity, performance, & extras, to simplify various array and object manipulations. Specifically, we use the `shuffle` function from Lodash to randomize the array of books fetched from the Google Books API. This choice was made for its performance benefits and reliability over a custom shuffle implementation (my initial approach).
 - Axios for API requests
 - Bulma CSS Framework
 - FontAwesome for icons

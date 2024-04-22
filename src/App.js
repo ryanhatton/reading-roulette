@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { shuffle } from "lodash";
 import "bulma/css/bulma.min.css";
 import "./App.css";
 import logo from "./logo.svg";
@@ -8,70 +9,69 @@ function App() {
   const [book, setBook] = useState(null);
   const [subject, setSubject] = useState("fiction");
   const [language, setLanguage] = useState("en");
+  const [keyword, setKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  function shuffleArray(array) {
-    let currentIndex = array.length,
-      randomIndex;
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
-      ];
-    }
-    return array;
-  }
+ const analyzeKeyword = (keyword) => {
+    const stopwords = ['the', 'in', 'on', 'at', 'of', 'and'];
+    let words = keyword.split(' ').filter(word => !stopwords.includes(word.toLowerCase()));
+    return words.join(' ');
+  };
 
-  const fetchRandomBook = (retry = 0, maxRetries = 5) => {
+  const fetchRandomBook = async (retry = 0, maxRetries = 5) => {
+    setIsLoading(true);
+    setError("");
     const maxResults = 40;
     const maxStartIndex = 200;
     const startIndex = Math.floor(Math.random() * maxStartIndex);
+    const processedKeyword = analyzeKeyword(keyword);
+    const query = processedKeyword ? `(${processedKeyword} OR intitle:${processedKeyword} OR inauthor:${processedKeyword})+subject:${subject}` : `subject:${subject}`;
 
-    axios
-      .get(`https://www.googleapis.com/books/v1/volumes`, {
-        params: {
-          q: `subject:${subject}`,
-          langRestrict: language,
-          startIndex: startIndex,
-          maxResults: maxResults,
-        },
-      })
-      .then((response) => {
-        const books = response.data.items;
-        if (!books || books.length === 0) {
-          if (retry < maxRetries) {
-            setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
-          } else {
-            setError(
-              "No books found after several attempts. Please try a different subject or language."
-            );
-            setIsLoading(false);
-          }
-        } else {
-          const validBooks = books.filter(
-            (book) =>
-              book.volumeInfo &&
-              book.volumeInfo.authors &&
-              book.volumeInfo.description
-          );
-          if (validBooks.length > 0) {
-            const shuffledBooks = shuffleArray(validBooks);
-            setBook(shuffledBooks[0]);
-          } else {
-            setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
-          }
-          setIsLoading(false);
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/books/v1/volumes`, {
+          params: {
+            q: query,
+            langRestrict: language,
+            startIndex,
+            maxResults,
+          },
         }
-      })
-      .catch((error) => {
-        setError(
-          "Failed to load data. Please check your network connection and try again."
+      );
+
+      const books = response.data.items;
+      if (!books || books.length === 0) {
+        if (retry < maxRetries) {
+          setError(
+            "No books found. Try broadening your search criteria, adjusting the keyword, or selecting a different subject."
+          );
+          setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
+        } else {
+          setError(
+            "No results found after several attempts. Please modify your search and try again."
+          );
+        }
+      } else {
+        const validBooks = books.filter(
+          (book) =>
+            book.volumeInfo &&
+            book.volumeInfo.authors &&
+            book.volumeInfo.description
         );
-        setIsLoading(false);
-      });
+        if (validBooks.length > 0) {
+          setBook(shuffle(validBooks)[0]);
+        } else {
+          setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
+        }
+      }
+    } catch (error) {
+      setError(
+        "Failed to load data. Please check your network connection and try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -82,32 +82,52 @@ function App() {
         <p class="subtitle is-4 mt-2">Leave your next book to chance.</p>
       </header>
 
-      <div className="container mb-6">
-      {error && <div className="notification is-danger">{error}</div>}
+      <div className="section">
+        {error && <div className="notification is-danger">{error}</div>}
         <div class="mb-6">
+          
+
           <div className="field column">
             <label className="label is-medium ">Select a Subject:</label>
             <div className="control has-icons-left">
               <div className="select is-large">
                 <select
-                  class="dropdown-content"
+                  class=""
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                 >
                   <option value="fiction">Fiction</option>
-                  <option value="nonfiction">Non-Fiction</option>
+                  <option value="non-fiction">Non-Fiction</option>
+                  <option value="science">Science</option>
                   <option value="history">History</option>
                   <option value="biography">Biography</option>
-                  <option value="self-help">Self-Help</option>
-                  <option value="science">Science</option>
-                  <option value="fantasy">Fantasy</option>
+                  <option value="mystery">Mystery & Thrillers</option>
+                  <option value="romance">Romance</option>
                   <option value="technology">Technology</option>
+                  <option value="self-help">Self-Help</option>
+                  <option value="business">Business</option>
+                  <option value="cookbooks">Cookbooks</option>
                   <option value="philosophy">Philosophy</option>
+                  <option value="art">Art & Photography</option>
+                  <option value="children">Children's Books</option>
                 </select>
                 <span class="icon is-small is-left">
                   <i class="fas fa-book"></i>
                 </span>
               </div>
+            </div>
+          </div>
+
+          <div className="field column">
+            <label className="label is-medium">Keyword:</label>
+            <div className="control">
+              <input
+                className="input is-large"
+                type="text"
+                placeholder="Enter keyword (optional)"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
             </div>
           </div>
 
@@ -134,11 +154,16 @@ function App() {
         </div>
 
         {!isLoading ? (
-          <button className="button is-primary is-large" onClick={fetchRandomBook}>
+          <button
+            className="button is-primary is-large"
+            onClick={fetchRandomBook}
+          >
             Find a Book
           </button>
         ) : (
-          <button className="button is-primary is-large is-loading">Loading...</button>
+          <button className="button is-primary is-large is-loading">
+            Loading...
+          </button>
         )}
 
         {book && (
