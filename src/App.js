@@ -2,73 +2,93 @@ import React, { useState } from "react";
 import axios from "axios";
 import { shuffle } from "lodash";
 import "bulma/css/bulma.min.css";
+
+//Components
+import Dropdown from "./Dropdown";
+
+//Dropdown arrays
+import { languages } from "./languages";
+import { subjects } from "./subjects";
+
 import "./App.css";
 import logo from "./logo.svg";
 
 function App() {
   const [book, setBook] = useState(null);
   const [subject, setSubject] = useState("fiction");
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("English");
   const [keyword, setKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
- const analyzeKeyword = (keyword) => {
-    const stopwords = ['the', 'in', 'on', 'at', 'of', 'and'];
-    let words = keyword.split(' ').filter(word => !stopwords.includes(word.toLowerCase()));
-    return words.join(' ');
+  const analyzeKeyword = (keyword) => {
+    const stopwords = ["the", "in", "on", "at", "of", "and"];
+    return keyword
+      .split(" ")
+      .filter((word) => !stopwords.includes(word.toLowerCase()))
+      .join(" ");
+  };
+
+  const truncateDescription = (description, maxWords = 125) => {
+    const words = description.split(" ");
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(" ") + "...";
+    }
+    return description;
   };
 
   const fetchRandomBook = async (retry = 0, maxRetries = 5) => {
     setIsLoading(true);
-    setError("");
+    if (retry === 0) setError(""); // Clear error only on the first try
+
     const maxResults = 40;
-    const maxStartIndex = 200;
-    const startIndex = Math.floor(Math.random() * maxStartIndex);
+    const startIndex = retry === 0 ? Math.floor(Math.random() * 200) : 0;
     const processedKeyword = analyzeKeyword(keyword);
-    const query = processedKeyword ? `(${processedKeyword} OR intitle:${processedKeyword} OR inauthor:${processedKeyword})+subject:${subject}` : `subject:${subject}`;
+    const query = processedKeyword
+      ? `(${processedKeyword} OR intitle:${processedKeyword} OR inauthor:${processedKeyword})+subject:${subject}`
+      : `subject:${subject}`;
 
     try {
       const response = await axios.get(
-        `https://www.googleapis.com/books/v1/volumes`, {
+        `https://www.googleapis.com/books/v1/volumes`,
+        {
           params: {
             q: query,
             langRestrict: language,
             startIndex,
             maxResults,
+            orderBy: "relevance",
+            printType: "books",
+            projection: "full",
           },
         }
       );
 
-      const books = response.data.items;
-      if (!books || books.length === 0) {
-        if (retry < maxRetries) {
-          setError(
-            "No books found. Try broadening your search criteria, adjusting the keyword, or selecting a different subject."
-          );
-          setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
-        } else {
-          setError(
-            "No results found after several attempts. Please modify your search and try again."
-          );
-        }
-      } else {
-        const validBooks = books.filter(
+      let books = response.data.items || [];
+      if (books.length === 0 && retry < maxRetries) {
+        setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
+      } else if (books.length > 0) {
+        books = books.filter(
           (book) =>
             book.volumeInfo &&
             book.volumeInfo.authors &&
             book.volumeInfo.description
         );
-        if (validBooks.length > 0) {
-          setBook(shuffle(validBooks)[0]);
-        } else {
-          setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
-        }
+        setBook(shuffle(books)[0]); // Random selection from valid books
+        setError("");
+      } else {
+        setError(
+          "No results found after several attempts. Please modify your search and try again."
+        );
+        setBook(null);
       }
     } catch (error) {
       setError(
         "Failed to load data. Please check your network connection and try again."
       );
+      setBook(null);
+      if (retry < maxRetries)
+        setTimeout(() => fetchRandomBook(retry + 1, maxRetries), 1000);
     } finally {
       setIsLoading(false);
     }
@@ -77,48 +97,34 @@ function App() {
   return (
     <div className="App">
       <header className="App-header mb-4">
-        <img src={logo} className="App-logo is-hidden-mobile" alt="logo" />
-        <h1 class="title has-text-info is-1 mt-6">Reading Roulette</h1>
-        <p class="subtitle is-4 mt-2">Leave your next book to chance.</p>
+        <img src={logo} className="App-logo is-hidden-mobile mt-6" alt="logo" />
+        <h1 className="title has-text-info is-1 mt-6">Reading Roulette</h1>
+        <p className="subtitle is-4 mt-2">Leave your next book to chance.</p>
       </header>
 
       <div className="section">
-        {error && <div className="notification is-danger">{error}</div>}
-        <div class="mb-6">
-          
-
-          <div className="field column">
-            <label className="label is-medium ">Select a Subject:</label>
-            <div className="control has-icons-left">
-              <div className="select is-large">
-                <select
-                  class=""
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                >
-                  <option value="fiction">Fiction</option>
-                  <option value="non-fiction">Non-Fiction</option>
-                  <option value="science">Science</option>
-                  <option value="history">History</option>
-                  <option value="biography">Biography</option>
-                  <option value="mystery">Mystery & Thrillers</option>
-                  <option value="romance">Romance</option>
-                  <option value="technology">Technology</option>
-                  <option value="self-help">Self-Help</option>
-                  <option value="business">Business</option>
-                  <option value="cookbooks">Cookbooks</option>
-                  <option value="philosophy">Philosophy</option>
-                  <option value="art">Art & Photography</option>
-                  <option value="children">Children's Books</option>
-                </select>
-                <span class="icon is-small is-left">
-                  <i class="fas fa-book"></i>
-                </span>
-              </div>
-            </div>
+        <div className="mb-6">
+          <div className="field">
+          <Dropdown
+            label="Select a Subject:"
+            options={subjects}
+            value={subject}
+            onChange={setSubject}
+            dropdownId="subjects-dropdown"
+          />
           </div>
 
-          <div className="field column">
+          <div className="field">
+          <Dropdown
+            label="Select Language:"
+            options={languages}
+            value={language}
+            onChange={setLanguage}
+            dropdownId="languages-dropdown"
+          />
+          </div>
+
+          <div className="field">
             <label className="label is-medium">Keyword:</label>
             <div className="control">
               <input
@@ -128,27 +134,6 @@ function App() {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
               />
-            </div>
-          </div>
-
-          <div className="field column">
-            <label className="label is-medium">Select Language:</label>
-            <div className="control has-icons-left">
-              <div className="select is-large">
-                <span class="select">
-                  <select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                  >
-                    <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                  </select>
-                  <span class="icon is-small is-left">
-                    <i class="fas fa-globe"></i>
-                  </span>
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -166,7 +151,7 @@ function App() {
           </button>
         )}
 
-        {book && (
+        {book ? (
           <div className="modal is-active">
             <div
               className="modal-background"
@@ -196,14 +181,15 @@ function App() {
                         : "Author information not available"}
                     </p>
                     <div className="content has-text-left">
-                      {book.volumeInfo.description ||
-                        "No description available."}
+                      {book.volumeInfo.description
+                        ? truncateDescription(book.volumeInfo.description)
+                        : "No description available."}
                     </div>
                   </div>
                 </div>
               </section>
               <footer className="modal-card-foot is-justify-content-center">
-                <div class="buttons">
+                <div className="buttons">
                   <button
                     className="button is-rounded is-medium"
                     onClick={() => setBook(null)}
@@ -214,8 +200,8 @@ function App() {
                     className="button is-primary is-rounded is-medium"
                     onClick={fetchRandomBook}
                   >
-                    <span class="icon">
-                      <i class="fas fa-solid fa-spinner"></i>
+                    <span className="icon">
+                      <i className="fas fa-solid fa-spinner"></i>
                     </span>
                     <span>Pick Again</span>
                   </button>
@@ -226,8 +212,8 @@ function App() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <span class="icon">
-                      <i class="fas fa-solid fa-link"></i>
+                    <span className="icon">
+                      <i className="fas fa-solid fa-link"></i>
                     </span>
                     <span>Learn more</span>
                   </a>
@@ -235,12 +221,55 @@ function App() {
               </footer>
             </div>
           </div>
+        ) : (
+          error && (
+            <div className="modal is-active">
+              <div
+                className="modal-background"
+                onClick={() => {
+                  setError("");
+                  setBook(null);
+                }}
+              ></div>
+              <div className="modal-card">
+                <section className="modal-card-body">
+                  <div className="content has-text-centered">
+                    <p className="title is-size-3 mb-1 has-text-info">
+                      {error}
+                    </p>
+                  </div>
+                </section>
+                <footer className="modal-card-foot is-justify-content-center">
+                  <div className="buttons">
+                    <button
+                      className="button is-rounded is-medium"
+                      onClick={() => {
+                        setError("");
+                        setBook(null);
+                      }}
+                    >
+                      Close
+                    </button>
+                    <button
+                      className="button is-primary is-rounded is-medium"
+                      onClick={() => {
+                        setError("");
+                        fetchRandomBook();
+                      }}
+                    >
+                      Retry
+                    </button>
+                  </div>
+                </footer>
+              </div>
+            </div>
+          )
         )}
       </div>
 
-      <footer class="footer">
-        <div class="content has-text-centered mt-6">
-          <p class="subtitle mb-6">
+      <footer className="footer">
+        <div className="content has-text-centered mt-6">
+          <p className="subtitle mb-6">
             <strong>Reading Roulette</strong> was made with ❤️ by{" "}
             <a href="https://ryanhatton.net">Ryan Hatton</a>.
           </p>
@@ -255,15 +284,15 @@ function App() {
             </a>
             .
           </p>
-          <div class="buttons is-grouped is-centered">
+          <div className="buttons is-grouped is-centered">
             <a
               href="https://github.com/ryanhatton/reading-roulette/tree/main"
-              class="button is-info is-inverted"
+              className="button is-info is-inverted"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span class="icon">
-                <i class="fab fa-github"></i>
+              <span className="icon">
+                <i className="fab fa-github"></i>
               </span>
               <span>View on Github</span>
             </a>
