@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/reading-roulette/static/css/main.022e51b9.css",
+    "main.js": "/reading-roulette/static/js/main.3132c9e5.js",
+    "static/js/453.2144e4ed.chunk.js": "/reading-roulette/static/js/453.2144e4ed.chunk.js",
+    "static/media/logo.svg": "/reading-roulette/static/media/logo.47318ffd583eb1dcb14b605916f6f6da.svg",
+    "index.html": "/reading-roulette/index.html",
+    "main.022e51b9.css.map": "/reading-roulette/static/css/main.022e51b9.css.map",
+    "main.3132c9e5.js.map": "/reading-roulette/static/js/main.3132c9e5.js.map",
+    "453.2144e4ed.chunk.js.map": "/reading-roulette/static/js/453.2144e4ed.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.022e51b9.css",
+    "static/js/main.3132c9e5.js"
+  ]
+}
