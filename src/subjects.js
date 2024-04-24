@@ -10,5 +10,5 @@ export const subjects = [
     { value: 'business', label: 'Business' },
     { value: 'cookbooks', label: 'Cookbooks' },
     { value: 'philosophy', label: 'Philosophy' },
-    { value: 'art', label: 'Art & Photography' },
+    { value: 'art', label: 'Art & Design' },
   ];

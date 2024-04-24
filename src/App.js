@@ -16,7 +16,7 @@ import logo from "./logo.svg";
 function App() {
   const [book, setBook] = useState(null);
   const [subject, setSubject] = useState("fiction");
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState("en");
   const [keyword, setKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -95,52 +95,50 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header mb-4">
+    <div className="App pr-6 pl-6">
+      <header className="App-header mb-6">
         <img src={logo} className="App-logo is-hidden-mobile mt-6" alt="logo" />
         <h1 className="title has-text-info is-1 mt-6">Reading Roulette</h1>
         <p className="subtitle is-4 mt-2">Leave your next book to chance.</p>
       </header>
 
-      <div className="section">
-        <div className="mb-6">
-          <div className="field">
+      <div className="grid is-column-gap-6">
+        <div className="cell">
+          <label className="label is-medium">Subject:</label>
           <Dropdown
-            label="Select a Subject:"
             options={subjects}
             value={subject}
             onChange={setSubject}
             dropdownId="subjects-dropdown"
           />
-          </div>
-
-          <div className="field">
+        </div>
+        <div className=" cell">
+          <label className="label is-medium">Language:</label>
           <Dropdown
-            label="Select Language:"
             options={languages}
             value={language}
             onChange={setLanguage}
             dropdownId="languages-dropdown"
           />
-          </div>
-
-          <div className="field">
-            <label className="label is-medium">Keyword:</label>
-            <div className="control">
-              <input
-                className="input is-large"
-                type="text"
-                placeholder="Enter keyword (optional)"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-              />
-            </div>
+        </div>
+        <div className=" cell is-col-span-2">
+          <label className="label is-medium">Keyword:</label>
+          <div className="control">
+            <input
+              className="input is-medium"
+              type="text"
+              placeholder="Add a keyword (optional)"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
           </div>
         </div>
+      </div>
 
+      <div className="mt-2">
         {!isLoading ? (
           <button
-            className="button is-primary is-large"
+            className="button is-primary is-large is-rounded"
             onClick={fetchRandomBook}
           >
             Find a Book
@@ -267,9 +265,9 @@ function App() {
         )}
       </div>
 
-      <footer className="footer">
+      <footer className="footer mt-6">
         <div className="content has-text-centered mt-6">
-          <p className="subtitle mb-6">
+          <p className="subtitle mb-4">
             <strong>Reading Roulette</strong> was made with ❤️ by{" "}
             <a href="https://ryanhatton.net">Ryan Hatton</a>.
           </p>
