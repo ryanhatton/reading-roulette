@@ -144,7 +144,7 @@ function App() {
             Find a Book
           </button>
         ) : (
-          <button className="button is-primary is-large is-loading">
+          <button className="button is-primary is-large is-rounded is-loading">
             Loading...
           </button>
         )}
