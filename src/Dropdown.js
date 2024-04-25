@@ -16,7 +16,7 @@ const Dropdown = ({ options, value, onChange, dropdownId }) => {
       <div className="control">
         <div className="dropdown-trigger">
           <button
-            className="button is-medium"
+            className="button is-large"
             aria-haspopup="true"
             aria-controls={dropdownId}
             onClick={() => setIsActive(!isActive)}

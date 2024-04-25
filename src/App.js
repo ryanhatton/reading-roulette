@@ -95,16 +95,16 @@ function App() {
   };
 
   return (
-    <div className="App pr-6 pl-6">
+    <div className="App">
       <header className="App-header mb-6">
         <img src={logo} className="App-logo is-hidden-mobile mt-6" alt="logo" />
         <h1 className="title has-text-info is-1 mt-6">Reading Roulette</h1>
         <p className="subtitle is-4 mt-2">Leave your next book to chance.</p>
       </header>
 
-      <div className="grid is-column-gap-6">
+      <div className="grid is-column-gap-8">
         <div className="cell">
-          <label className="label is-medium">Subject:</label>
+          <label className="label is-large">Subject:</label>
           <Dropdown
             options={subjects}
             value={subject}
@@ -113,7 +113,7 @@ function App() {
           />
         </div>
         <div className=" cell">
-          <label className="label is-medium">Language:</label>
+          <label className="label is-large">Language:</label>
           <Dropdown
             options={languages}
             value={language}
@@ -122,10 +122,10 @@ function App() {
           />
         </div>
         <div className=" cell is-col-span-2">
-          <label className="label is-medium">Keyword:</label>
+          <label className="label is-large">Keyword:</label>
           <div className="control">
             <input
-              className="input is-medium"
+              className="input is-large"
               type="text"
               placeholder="Add a keyword (optional)"
               value={keyword}
@@ -188,33 +188,33 @@ function App() {
               </section>
               <footer className="modal-card-foot is-justify-content-center">
                 <div className="buttons">
-                  <button
-                    className="button is-rounded is-medium"
-                    onClick={() => setBook(null)}
+                  <a
+                    className="button is-info is-rounded is-fullwidth is-large"
+                    href={book.volumeInfo.infoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    Close
-                  </button>
+                    <span className="icon is-hidden-mobile">
+                      <i className="fas fa-solid fa-link"></i>
+                    </span>
+                    <span>Learn more</span>
+                  </a>
                   <button
-                    className="button is-primary is-rounded is-medium"
+                    className="button is-large is-primary is-fullwidth is-rounded"
                     onClick={fetchRandomBook}
                   >
-                    <span className="icon">
+                    <span className="icon is-hidden-mobile">
                       <i className="fas fa-solid fa-spinner"></i>
                     </span>
                     <span>Pick Again</span>
                   </button>
 
-                  <a
-                    className="button is-info is-rounded is-medium"
-                    href={book.volumeInfo.infoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    className="button is-fullwidth is-rounded is-large"
+                    onClick={() => setBook(null)}
                   >
-                    <span className="icon">
-                      <i className="fas fa-solid fa-link"></i>
-                    </span>
-                    <span>Learn more</span>
-                  </a>
+                    Close
+                  </button>
                 </div>
               </footer>
             </div>
