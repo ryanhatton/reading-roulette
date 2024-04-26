@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { shuffle } from "lodash";
 import "bulma/css/bulma.min.css";
-
-//Components
 import Dropdown from "./Dropdown";
 
 //Dropdown arrays
@@ -189,7 +187,7 @@ function App() {
               <footer className="modal-card-foot is-justify-content-center">
                 <div className="buttons">
                   <a
-                    className="button is-info is-rounded is-fullwidth is-large"
+                    className="button is-info is-rounded is-fullwidth is-medium"
                     href={book.volumeInfo.infoLink}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -200,7 +198,7 @@ function App() {
                     <span>Learn more</span>
                   </a>
                   <button
-                    className="button is-large is-primary is-fullwidth is-rounded"
+                    className="button is-medium is-primary is-fullwidth is-rounded"
                     onClick={fetchRandomBook}
                   >
                     <span className="icon is-hidden-mobile">
@@ -210,7 +208,7 @@ function App() {
                   </button>
 
                   <button
-                    className="button is-fullwidth is-rounded is-large"
+                    className="button is-fullwidth is-rounded is-medium"
                     onClick={() => setBook(null)}
                   >
                     Close

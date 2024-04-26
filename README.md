@@ -1,54 +1,47 @@
 # Reading Roulette
 
-Reading Roulette is a web application built with React that allows users to discover random books based on selected subjects and languages. Utilizing the Google Books API, Reading Roulette makes book discovery exciting and spontaneous.
+Reading Roulette is a React-based web application that allows users to randomly select a book based on subject and language. The application integrates with the Google Books API to fetch book details and offers a user-friendly interface with filtering options.
 
 ## Features
 
-- **Book Selection**: Users can choose a book's subject and language.
-- **Random Book Discovery**: Fetches a random book from a pool of books based on the user's selection.
-- **Detailed Book Information**: Displays detailed information about the book, including title, authors, and description.
-- **Responsive Design**: Fully responsive web design that works on desktop and mobile.
+- Search for books by subject and language.
+- Filter search results with custom keywords.
+- View detailed book information in a modal window.
+- Responsive design implemented using Bulma CSS framework.
 
-## Technologies Used
+## Prerequisites
 
-- React.js
-- [Lodash](https://lodash.com/), a modern JavaScript utility library delivering modularity, performance, & extras, to simplify various array and object manipulations. Specifically, we use the `shuffle` function from Lodash to randomize the array of books fetched from the Google Books API. This choice was made for its performance benefits and reliability over a custom shuffle implementation (my initial approach).
-- Axios for API requests
-- Bulma CSS Framework
-- FontAwesome for icons
+Before you begin, ensure you have met the following requirements:
 
-## Getting Started
+- Node.js installed (v12.x or newer recommended).
+- npm or Yarn as package managers.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+## Installation
 
-### Prerequisites
+Clone the repository and install the dependencies:
 
-You need to have Node.js and npm installed on your computer. Node.js 12.x or newer is recommended.
-
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/ryanhatton/reading-roulette.git
-   cd reading-roulette
-2. **Install dependencies**
-
-   ```bash
-   npm install
-3. **Start the development server**
-
-   ```bash
-   npm start
-   ```
-   This runs the app in the development mode. Open http://localhost:3000 to view it in the browser.
+```bash
+git clone https://github.com/ryanhatton/reading-roulette.git
+cd reading-roulette
+npm install
+```
 
 ## Usage
+
+To start the application locally, run:
+
+```bash
+npm start
+```
+This will launch the application on http://localhost:3000. Navigate to this URL in your web browser to use the application.
+
+
 
 Once the application is running:
 
 - **Select a Subject**: Choose from a list of subjects like Fiction, Non-Fiction, Science, etc.
-- **Select a Language**: Choose from English, Spanish, French, etc.
+- **Select a Language**: Choose from English, Spanish, and French.
+- **Select a Keyword**: Add an additional keyword to refine the book search output.
 - **Find a Book**: Click on the 'Find a Book' button to fetch a random book based on your selections.
 - **View Book Details**: If a book is found, the modal will display detailed information about the book.
 
@@ -66,11 +59,12 @@ Contributions are what make the open-source community such an amazing place to l
 
 This project is licensed under the [MIT License](http://opensource.org/licenses/mit-license.php).
 
-## Acknowledgments
+## Acknowledgments & Credits
 
 - Google Books API for providing the book data.
 - Bulma CSS for the styling framework.
 - FontAwesome for providing the web icons used in the application.
+- The project utilizes axios for API calls and lodash for utility functions.
 
 ## Contact
 
