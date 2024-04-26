@@ -68,6 +68,10 @@ This project is licensed under the [MIT License](http://opensource.org/licenses/
 
 ## Contact
 
-Ryan Hatton - [@HiRyanHatton](https://twitter.com/HiRyanHatton)
+Twitter/X - [@HiRyanHatton](https://twitter.com/HiRyanHatton)
+
+Website - [ryanhatton.net](https://www.ryanhatton.net/)
+
+IG - @ryan.hatton
 
 **Project Link**: [https://github.com/ryanhatton/reading-roulette](https://github.com/ryanhatton/reading-roulette)
